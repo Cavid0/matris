@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>Xətti Cəbrin Proqramlaşdırmadakı Rolu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            line-height: 1.6;
+        }
+        
+        .hero {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #ffe66d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .demo-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+            align-items: start;
+        }
+        
+        .visualization {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .visualization::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+        }
+        
+        .controls {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.5);
+            background: linear-gradient(45deg, #ff5252, #ff6b6b);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .special-btn {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3) !important;
+        }
+        
+        .special-btn:hover {
+            background: linear-gradient(45deg, #45b7d1, #4ecdc4) !important;
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.5) !important;
+        }
+        
+        canvas {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: linear-gradient(135deg, #000428, #004e92);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .matrix-display {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            border-left: 4px solid #4ecdc4;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .explanation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffe66d;
+        }
+        
+        .explanation h4 {
+            color: #ffe66d;
+            margin-top: 0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .code-snippet {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            border-left: 3px solid #45b7d1;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            color: #ffe66d;
+            font-weight: bold;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-area {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🚀 Xətti Cəbrin Proqramlaşdırmadakı Rolu</h1>
+        <p>Oyun inkişafından AI-yə qədər - hər yerdə xətti cəbr!</p>
+    </div>
+
+    <!-- Oyun İnkişafı - Şəkil Transformasiyası -->
+    <div class="container">
+        <h2>🎮 Oyun İnkişafı - Şəkil Transformasiyası</h2>
+        <div class="explanation">
+            <h4>💡 Real həyatda nə üçün istifadə olunur?</h4>
+            <p>Oyunlarda hər obyekt (maşın, karakter, bina) matrislərlə idarə olunur. Bu, oyun mühərriklərində (Unity, Unreal Engine) əsas prinsipdir!</p>
+        </div>
+        
+        <div class="demo-area">
+            <div class="visualization">
+                <canvas id="gameCanvas" width="350" height="350"></canvas>
+                <div class="matrix-display" id="gameMatrix">
+                    Transformasiya matrisi: Göstəriləcək...
+                </div>
+                <div class="code-snippet">
+<span class="highlight">// Unity C# kodu:</span>
+transform.Rotate(0, 0, <span id="rotationValue">15</span>);
+transform.localScale = Vector3.one * <span id="scaleValue">1.0</span>;
+                </div>
+            </div>
+            <div class="controls">
+                <h3>🕹️ Oyun Obyektini İdarə Et:</h3>
+                <button onclick="rotateGameObject(15)">↻ Sağa Fırlat</button>
+                <button onclick="rotateGameObject(-15)">↺ Sola Fırlat</button>
+                <button onclick="scaleGameObject(1.2)" class="special-btn">🔍 Böyüt</button>
+                <button onclick="scaleGameObject(0.8)" class="special-btn">🔎 Kiçilt</button>
+                <button onclick="translateGameObject(10, 0)">→ Sağa</button>
+                <button onclick="translateGameObject(-10, 0)">← Sola</button>
+                <button onclick="translateGameObject(0, 10)">↓ Aşağı</button>
+                <button onclick="translateGameObject(0, -10)">↑ Yuxarı</button>
+                <button onclick="resetGameObject()">🔄 Sıfırla</button>
+                
+                <div class="explanation">
+                    <h4>🎯 Əməliyyat növləri:</h4>
+                    <p><strong>Fırlanma:</strong> Rotasiya matrisi (oyunlarda ən çox istifadə)</p>
+                    <p><strong>Ölçüləndirmə:</strong> Skalyar matris (zooming effektləri)</p>
+                    <p><strong>Hərəkət:</strong> Translation matris (obyekt yerləşdirilməsi)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Şəkil İşləmə və Filtr Effektləri -->
+    <div class="container">
+        <h2>📸 Şəkil İşləmə - Instagram Filtrləri</h2>
+        <div class="explanation">
+            <h4>💡 Instagram, Snapchat, TikTok filtrləri necə işləyir?</h4>
+            <p>Bütün şəkil filtrləri (blur, brightness, contrast) matris əməliyyatlarıdır. Convolution matrislər pikselləri transformasiya edir!</p>
+        </div>
+        
+        <div class="demo-area">
+            <div class="visualization">
+                <canvas id="imageCanvas" width="350" height="350"></canvas>
+                <div class="matrix-display" id="imageMatrix">
+                    Filtr matrisi: Göstəriləcək...
+                </div>
+                <div class="code-snippet">
+<span class="highlight">// OpenCV Python kodu:</span>
+kernel = np.array([[<span id="kernelValues">0, -1, 0], [-1, 5, -1], [0, -1, 0]</span>])
+filtered = cv2.filter2D(image, -1, kernel)
+                </div>
+            </div>
+            <div class="controls">
+                <h3>🎨 Şəkil Filtrləri:</h3>
+                <button onclick="applyFilter('sharpen')" class="special-btn">✨ Sharpen</button>
+                <button onclick="applyFilter('blur')">🌫️ Blur</button>
+                <button onclick="applyFilter('edge')">📐 Edge Detect</button>
+                <button onclick="applyFilter('emboss')">🎭 Emboss</button>
+                <button onclick="applyFilter('brightness')">💡 Brightness</button>
+                <button onclick="resetImageFilter()">🔄 Sıfırla</button>
+                
+                <div style="margin-top: 20px;">
+                    <h4>🎛️ Filtr İntensivliyi:</h4>
+                    <label>Intensivlik: <span id="filterIntensityValue">5</span></label>
+                    <input type="range" id="filterIntensity" min="1" max="20" value="5" onchange="updateFilterIntensity(this.value)">
+                </div>
+                
+                <div class="explanation">
+                    <h4>🔬 Convolution Matrix:</h4>
+                    <p>Hər piksel ətrafındakı piksellər ilə matris vurulması yapılır</p>
+                    <p>Bu proses paralel hesablama ilə GPU-da icra olunur</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Qrafika və Kompüter Görmə -->
+    <div class="container">
+        <h2>🎬 3D Qrafika və Kino CGI</h2>
+        <div class="explanation">
+            <h4>💡 Hollywood filmlərində necə işləyir?</h4>
+            <p>Pixar, Marvel filmləri - hamısı xətti cəbrlə işləyir! Hər 3D modelin hər nöqtəsi matris hesablamaları ilə render olunur.</p>
+        </div>
+        
+        <div class="demo-area">
+            <div class="visualization">
+                <canvas id="cgi3DCanvas" width="400" height="400"></canvas>
+                <div class="matrix-display" id="cgi3DMatrix">
+                    3D Təpə nöqtələri: Göstəriləcək...
+                </div>
+                <div class="stat-card">
+                    <strong>Seçilmiş Nöqtə:</strong> <span id="selectedVertexInfo">(0, 0, 0)</span><br>
+                    <strong>Kamera Məsafəsi:</strong> <span id="cameraDistance">200px</span>
+                </div>
+            </div>
+            <div class="controls">
+                <h3>🎥 3D Sahni İdarə Et:</h3>
+                <button onclick="rotate3DScene('X', 10)">🔄 X oxu</button>
+                <button onclick="rotate3DScene('Y', 10)">🔄 Y oxu</button>
+                <button onclick="rotate3DScene('Z', 10)">🔄 Z oxu</button>
+                <button onclick="animate3DScene()" class="special-btn">✨ Animasiya</button>
+                <button onclick="reset3DScene()">🔄 Sıfırla</button>
+                
+                <div style="margin-top: 20px;">
+                    <h4>📹 Kamera Tənzimləməsi:</h4>
+                    <label>Kamera Məsafəsi: <span id="cameraDistanceValue">300</span>px</label>
+                    <input type="range" id="cameraSlider" min="100" max="500" value="300" onchange="updateCamera(this.value)">
+                    
+                    <label>Vertex Seçimi: <span id="vertexSelectionValue">0</span></label>
+                    <input type="range" id="vertexSlider" min="0" max="7" value="0" onchange="selectVertex(this.value)">
+                </div>
+                
+                <div class="code-snippet">
+<span class="highlight">// 3D Engine kodu:</span>
+Matrix4x4 mvp = projection * view * model;
+Vector3 screenPos = mvp * worldPos;
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI və Maşın Öyrənməsi -->
+    <div class="container">
+        <h2>🤖 AI və Maşın Öyrənməsi</h2>
+        <div class="explanation">
+            <h4>💡 ChatGPT və AI necə işləyir?</h4>
+            <p>Bütün AI sistemləri (ChatGPT, image recognition, avtonomlu avtomobillər) matris əməliyyatları ilə işləyir. Neural şəbəkələr = matris vurmaları!</p>
+        </div>
+        
+        <div class="demo-area">
+            <div class="visualization">
+                <canvas id="aiCanvas" width="400" height="400"></canvas>
+                <div class="matrix-display" id="aiMatrix">
+                    Neural Şəbəkə Çəkiləri: Göstəriləcək...
+                </div>
+                <div class="stat-card">
+                    <strong>Dəqiqlik:</strong> <span id="aiAccuracy">85%</span><br>
+                    <strong>Öyrənmə Sürəti:</strong> <span id="learningRate">0.01</span>
+                </div>
+            </div>
+            <div class="controls">
+                <h3>🧠 AI Modeli Öyrət:</h3>
+                <button onclick="trainAI()" class="special-btn">📚 Modeli Öyrət</button>
+                <button onclick="testAI()">🎯 Test Et</button>
+                <button onclick="adjustWeights()">⚖️ Çəkiləri Tənzimlə</button>
+                <button onclick="resetAI()">🔄 Sıfırla</button>
+                
+                <div style="margin-top: 20px;">
+                    <h4>⚙️ AI Parametrləri:</h4>
+                    <label>Öyrənmə Sürəti: <span id="learningRateValue">10</span></label>
+                    <input type="range" id="learningRateSlider" min="1" max="50" value="10" onchange="updateLearningRate(this.value)">
+                    
+                    <label>Sinir Sayı: <span id="neuronsValue">5</span></label>
+                    <input type="range" id="neuronsSlider" min="3" max="10" value="5" onchange="updateNeurons(this.value)">
+                </div>
+                
+                <div class="code-snippet">
+<span class="highlight">// PyTorch/TensorFlow kodu:</span>
+output = torch.matmul(input, weights) + bias
+loss = criterion(output, target)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Veb İnkişafı və Animasiyalar -->
+    <div class="container">
+        <h2>💻 Veb İnkişafı - CSS Transforms</h2>
+        <div class="explanation">
+            <h4>💡 Veb saytlarda animasiyalar necə işləyir?</h4>
+            <p>CSS transform, WebGL, Canvas animasiyaları - hamısı xətti cəbr əməliyyatlarıdır. İnstagram filterləri, YouTube video effects!</p>
+        </div>
+        
+        <div class="demo-area">
+            <div class="visualization">
+                <canvas id="webCanvas" width="400" height="400"></canvas>
+                <div class="matrix-display" id="webMatrix">
+                    CSS Transform: Göstəriləcək...
+                </div>
+                <div class="code-snippet">
+<span class="highlight">/* CSS kodu: */</span>
+transform: matrix(<span id="cssMatrix">1, 0, 0, 1, 0, 0</span>);
+filter: <span id="filterEffect">brightness(100%)</span>;
+                </div>
+            </div>
+            <div class="controls">
+                <h3>🎨 Veb Elementini Tənzimlə:</h3>
+                <button onclick="webRotate(15)">🔄 Fırlat</button>
+                <button onclick="webSkew(10)">📐 Əy (Skew)</button>
+                <button onclick="webScaleFunction(1.2)" class="special-btn">🔍 Zoom</button>
+                <button onclick="addWebFilter('blur')" class="special-btn">🌫️ Blur Effekti</button>
+                <button onclick="addWebFilter('brightness')" class="special-btn">💡 Parlaqlıq</button>
+                <button onclick="resetWeb()">🔄 Sıfırla</button>
+                
+                <div style="margin-top: 20px;">
+                    <h4>🎭 Effekt İntensivliyi:</h4>
+                    <label>Fırlanma:</label>
+                    <input type="range" id="webRotationSlider" min="0" max="360" value="0" onchange="updateWebRotation(this.value)">
+                    
+                    <label>Ölçü:</label>
+                    <input type="range" id="webScaleSlider" min="50" max="200" value="100" onchange="updateWebScale(this.value)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 JavaScript loading started...');
+        
+        // ==================== GLOBAL VARIABLES ====================
+        let gameRotation = 0, gameScale = 1, gameTranslateX = 0, gameTranslateY = 0;
+        let cgi3DRotationX = 0, cgi3DRotationY = 0, cgi3DRotationZ = 0;
+        let selectedVertex = 0, cameraDistance = 300;
+        let aiAccuracy = 85, learningRate = 0.01, neurons = 5;
+        let webRotation = 0, webScale = 1, webSkewX = 0;
+        let isAnimating = false;
+        let currentFilter = 'none';
+        let filterIntensity = 5;
+
+        // ==================== ŞƏKİL VE GÖRÜNTÜ YARADILMASI ====================
+        
+        // Oyun obyekti çəkmək üçün maşın görüntüsü
+        function drawCarSprite(ctx, x, y, width, height) {
+            // Maşın gövdəsi
+            ctx.fillStyle = '#ff6b6b';
+            ctx.fillRect(x - width/2, y - height/4, width, height/2);
+            
+            // Maşın tavanı
+            ctx.fillStyle = '#4ecdc4';
+            ctx.fillRect(x - width/3, y - height/3, width*2/3, height/3);
+            
+            // Şüşələr
+            ctx.fillStyle = '#45b7d1';
+            ctx.fillRect(x - width/4, y - height/5, width/2, height/6);
+            
+            // Təkərlər
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(x - width/3, y + height/4, height/8, 0, 2 * Math.PI);
+            ctx.arc(x + width/3, y + height/4, height/8, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Farlar
+            ctx.fillStyle = '#ffe66d';
+            ctx.beginPath();
+            ctx.arc(x - width/2 + 5, y, 4, 0, 2 * Math.PI);
+            ctx.arc(x - width/2 + 5, y + 10, 4, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        // Şəkil işləmə üçün nümunə görüntü  
+        function createSampleImage(ctx, width, height) {
+            // Əvvəlcə canvas-ı təmizləyirik
+            ctx.clearRect(0, 0, width, height);
+            
+            // Maraqlı geometrik şəkil yaradırıq
+            // Qradient arxa plan
+            const radialGradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width/2);
+            radialGradient.addColorStop(0, '#FF9A8B');
+            radialGradient.addColorStop(0.4, '#6A82FB');  
+            radialGradient.addColorStop(1, '#FC466B');
+            
+            ctx.fillStyle = radialGradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Mərkəzdə böyük ulduz
+            ctx.save();
+            ctx.translate(width/2, height/2);
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+                const angle = (i * Math.PI) / 4;
+                const x = Math.cos(angle) * 80;
+                const y = Math.sin(angle) * 80;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+                
+                const innerAngle = ((i + 0.5) * Math.PI) / 4;
+                const innerX = Math.cos(innerAngle) * 40;
+                const innerY = Math.sin(innerAngle) * 40;
+                ctx.lineTo(innerX, innerY);
+            }
+            ctx.closePath();
+            ctx.fillStyle = '#FFD700';
+            ctx.fill();
+            ctx.strokeStyle = '#FFF';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.restore();
+            
+            // Künclərə kiçik dairələr
+            const corners = [[60, 60], [width-60, 60], [60, height-60], [width-60, height-60]];
+            corners.forEach((corner, i) => {
+                ctx.beginPath();
+                ctx.arc(corner[0], corner[1], 25, 0, 2 * Math.PI);
+                ctx.fillStyle = `hsl(${i * 90 + 180}, 70%, 60%)`;
+                ctx.fill();
+                ctx.strokeStyle = '#FFF';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+            
+            // Mətn əlavə edirik
+            ctx.fillStyle = '#FFF';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('FILTER TEST', width/2, 50);
+            
+            // Canvas-dan ImageData alırıq
+            return ctx.getImageData(0, 0, width, height);
+        }
+
+        // ==================== OYUN İNKİŞAFI ====================
+        let gameCanvas, gameCtx;
+
+        function drawGameObject() {
+            gameCtx.clearRect(0, 0, 350, 350);
+            gameCtx.save();
+            gameCtx.translate(175 + gameTranslateX, 175 + gameTranslateY);
+            gameCtx.rotate(gameRotation * Math.PI / 180);
+            gameCtx.scale(gameScale, gameScale);
+            
+            // Oyun obyekti çək (maşın)
+            drawCarSprite(gameCtx, 0, 0, 80, 40);
+            
+            gameCtx.restore();
+            updateGameMatrix();
+        }
+
+        function rotateGameObject(degrees) {
+            gameRotation += degrees;
+            document.getElementById('rotationValue').textContent = degrees;
+            drawGameObject();
+        }
+        
+        console.log('✅ rotateGameObject function defined');
+
+        function scaleGameObject(factor) {
+            gameScale *= factor;
+            document.getElementById('scaleValue').textContent = gameScale.toFixed(2);
+            drawGameObject();
+        }
+
+        function translateGameObject(dx, dy) {
+            gameTranslateX += dx;
+            gameTranslateY += dy;
+            drawGameObject();
+        }
+
+        function resetGameObject() {
+            gameRotation = 0; gameScale = 1; gameTranslateX = 0; gameTranslateY = 0;
+            document.getElementById('rotationValue').textContent = '0';
+            document.getElementById('scaleValue').textContent = '1.0';
+            drawGameObject();
+        }
+
+        function updateGameMatrix() {
+            const cos = Math.cos(gameRotation * Math.PI / 180) * gameScale;
+            const sin = Math.sin(gameRotation * Math.PI / 180) * gameScale;
+            document.getElementById('gameMatrix').innerHTML = 
+                `Transformasiya Matrisi:<br>
+                [${cos.toFixed(2)}, ${(-sin).toFixed(2)}, ${gameTranslateX}]<br>
+                [${sin.toFixed(2)}, ${cos.toFixed(2)}, ${gameTranslateY}]<br>
+                [0, 0, 1]`;
+        }
+
+        // ==================== ŞƏKİL İŞLƏMƏ ====================
+        let imageCanvas, imageCtx;
+        let originalImageData = null;
+
+        function initializeImage() {
+            if (!imageCanvas || !imageCtx) {
+                console.error('Image canvas not initialized!');
+                return;
+            }
+            
+            originalImageData = createSampleImage(imageCtx, 350, 350);
+            imageCtx.putImageData(originalImageData, 0, 0);
+            updateImageMatrix();
+        }
+
+        function applyFilter(filterType) {
+            if (!originalImageData) return;
+            
+            currentFilter = filterType;
+            const kernels = {
+                'sharpen': [
+                    [0, -1, 0],
+                    [-1, 5, -1],
+                    [0, -1, 0]
+                ],
+                'blur': [
+                    [1/9, 1/9, 1/9],
+                    [1/9, 1/9, 1/9],
+                    [1/9, 1/9, 1/9]
+                ],
+                'edge': [
+                    [-1, -1, -1],
+                    [-1, 8, -1],
+                    [-1, -1, -1]
+                ],
+                'emboss': [
+                    [-2, -1, 0],
+                    [-1, 1, 1],
+                    [0, 1, 2]
+                ],
+                'brightness': [
+                    [0, 0, 0],
+                    [0, 1.5, 0],
+                    [0, 0, 0]
+                ]
+            };
+            
+            const kernel = kernels[filterType];
+            if (kernel) {
+                const filteredData = applyConvolution(originalImageData, kernel);
+                imageCtx.putImageData(filteredData, 0, 0);
+                updateImageMatrix();
+            }
+        }
+
+        function applyConvolution(imageData, kernel) {
+            const width = imageData.width;
+            const height = imageData.height;
+            const src = imageData.data;
+            const dst = imageCtx.createImageData(width, height);
+            const dstData = dst.data;
+            
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    let r = 0, g = 0, b = 0;
+                    
+                    for (let ky = 0; ky < 3; ky++) {
+                        for (let kx = 0; kx < 3; kx++) {
+                            const pixelIndex = ((y + ky - 1) * width + (x + kx - 1)) * 4;
+                            const weight = kernel[ky][kx];
+                            
+                            r += src[pixelIndex] * weight;
+                            g += src[pixelIndex + 1] * weight;
+                            b += src[pixelIndex + 2] * weight;
+                        }
+                    }
+                    
+                    const dstIndex = (y * width + x) * 4;
+                    dstData[dstIndex] = Math.max(0, Math.min(255, r));
+                    dstData[dstIndex + 1] = Math.max(0, Math.min(255, g));
+                    dstData[dstIndex + 2] = Math.max(0, Math.min(255, b));
+                    dstData[dstIndex + 3] = src[dstIndex + 3]; // Alpha
+                }
+            }
+            
+            return dst;
+        }
+
+        function updateFilterIntensity(value) {
+            filterIntensity = parseInt(value);
+            document.getElementById('filterIntensityValue').textContent = value;
+            if (currentFilter !== 'none') {
+                applyFilter(currentFilter);
+            }
+        }
+
+        function resetImageFilter() {
+            if (originalImageData) {
+                imageCtx.putImageData(originalImageData, 0, 0);
+                currentFilter = 'none';
+                updateImageMatrix();
+            }
+        }
+
+        function updateImageMatrix() {
+            const kernelMap = {
+                'sharpen': '0, -1, 0, -1, 5, -1, 0, -1, 0',
+                'blur': '1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9',
+                'edge': '-1, -1, -1, -1, 8, -1, -1, -1, -1',
+                'emboss': '-2, -1, 0, -1, 1, 1, 0, 1, 2',
+                'brightness': '0, 0, 0, 0, 1.5, 0, 0, 0, 0',
+                'none': '0, 0, 0, 0, 1, 0, 0, 0, 0'
+            };
+            
+            document.getElementById('kernelValues').textContent = kernelMap[currentFilter] || kernelMap['none'];
+            document.getElementById('imageMatrix').innerHTML = 
+                `Convolution Kernel (${currentFilter}):<br>
+                [${kernelMap[currentFilter] || kernelMap['none']}]<br>
+                Intensivlik: ${filterIntensity}/20`;
+        }
+
+        // ==================== 3D CGI ====================
+        let cgi3DCanvas, cgi3DCtx;
+        let cgi3DVertices = [
+            {x: -60, y: -60, z: -60}, {x: 60, y: -60, z: -60},
+            {x: 60, y: 60, z: -60}, {x: -60, y: 60, z: -60},
+            {x: -60, y: -60, z: 60}, {x: 60, y: -60, z: 60},
+            {x: 60, y: 60, z: 60}, {x: -60, y: 60, z: 60}
+        ];
+
+        function draw3DScene() {
+            cgi3DCtx.clearRect(0, 0, 400, 400);
+            cgi3DCtx.save();
+            cgi3DCtx.translate(200, 200);
+            
+            // 3D koordinat oxları
+            cgi3DCtx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            cgi3DCtx.lineWidth = 1;
+            cgi3DCtx.beginPath();
+            cgi3DCtx.moveTo(-150, 0); cgi3DCtx.lineTo(150, 0); // X oxu
+            cgi3DCtx.moveTo(0, -150); cgi3DCtx.lineTo(0, 150); // Y oxu
+            cgi3DCtx.stroke();
+            
+            // 3D xətləri
+            cgi3DCtx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            cgi3DCtx.lineWidth = 2;
+            
+            const edges = [
+                [0,1],[1,2],[2,3],[3,0], // arxa üz
+                [4,5],[5,6],[6,7],[7,4], // ön üz
+                [0,4],[1,5],[2,6],[3,7]  // bağlantılar
+            ];
+            
+            edges.forEach(edge => {
+                const p1 = project3DPoint(cgi3DVertices[edge[0]]);
+                const p2 = project3DPoint(cgi3DVertices[edge[1]]);
+                cgi3DCtx.beginPath();
+                cgi3DCtx.moveTo(p1.x, p1.y);
+                cgi3DCtx.lineTo(p2.x, p2.y);
+                cgi3DCtx.stroke();
+            });
+            
+            // Vertices
+            cgi3DVertices.forEach((vertex, index) => {
+                const point = project3DPoint(vertex);
+                cgi3DCtx.beginPath();
+                cgi3DCtx.arc(point.x, point.y, 6, 0, 2 * Math.PI);
+                cgi3DCtx.fillStyle = index === selectedVertex ? '#ff6b6b' : '#4ecdc4';
+                cgi3DCtx.fill();
+                
+                // Vertex nömrəsi
+                cgi3DCtx.fillStyle = 'white';
+                cgi3DCtx.font = '12px Arial';
+                cgi3DCtx.fillText(index.toString(), point.x + 10, point.y - 10);
+            });
+            
+            cgi3DCtx.restore();
+            update3DMatrix();
+        }
+
+        function project3DPoint(vertex) {
+            const scale = cameraDistance / (cameraDistance + vertex.z);
+            return {
+                x: vertex.x * scale,
+                y: vertex.y * scale
+            };
+        }
+
+        function rotate3DScene(axis, degrees) {
+            const angle = degrees * Math.PI / 180;
+            cgi3DVertices = cgi3DVertices.map(vertex => {
+                let {x, y, z} = vertex;
+                
+                if (axis === 'X') {
+                    const newY = y * Math.cos(angle) - z * Math.sin(angle);
+                    const newZ = y * Math.sin(angle) + z * Math.cos(angle);
+                    return {x, y: newY, z: newZ};
+                } else if (axis === 'Y') {
+                    const newX = x * Math.cos(angle) + z * Math.sin(angle);
+                    const newZ = -x * Math.sin(angle) + z * Math.cos(angle);
+                    return {x: newX, y, z: newZ};
+                } else if (axis === 'Z') {
+                    const newX = x * Math.cos(angle) - y * Math.sin(angle);
+                    const newY = x * Math.sin(angle) + y * Math.cos(angle);
+                    return {x: newX, y: newY, z};
+                }
+            });
+            draw3DScene();
+        }
+
+        function animate3DScene() {
+            if (isAnimating) return;
+            isAnimating = true;
+            let frame = 0;
+            const animate = () => {
+                rotate3DScene('Y', 2);
+                rotate3DScene('X', 1);
+                frame++;
+                if (frame < 180) {
+                    requestAnimationFrame(animate);
+                } else {
+                    isAnimating = false;
+                }
+            };
+            animate();
+        }
+
+        function updateCamera(distance) {
+            cameraDistance = parseInt(distance);
+            document.getElementById('cameraDistance').textContent = distance + 'px';
+            document.getElementById('cameraDistanceValue').textContent = distance;
+            draw3DScene();
+        }
+
+        function selectVertex(index) {
+            selectedVertex = parseInt(index);
+            const vertex = cgi3DVertices[selectedVertex];
+            document.getElementById('selectedVertexInfo').textContent = 
+                `(${vertex.x.toFixed(1)}, ${vertex.y.toFixed(1)}, ${vertex.z.toFixed(1)})`;
+            document.getElementById('vertexSelectionValue').textContent = index;
+            draw3DScene();
+        }
+
+        function reset3DScene() {
+            cgi3DVertices = [
+                {x: -60, y: -60, z: -60}, {x: 60, y: -60, z: -60},
+                {x: 60, y: 60, z: -60}, {x: -60, y: 60, z: -60},
+                {x: -60, y: -60, z: 60}, {x: 60, y: -60, z: 60},
+                {x: 60, y: 60, z: 60}, {x: -60, y: 60, z: 60}
+            ];
+            selectedVertex = 0;
+            document.getElementById('vertexSlider').value = 0;
+            draw3DScene();
+        }
+
+        function update3DMatrix() {
+            document.getElementById('cgi3DMatrix').innerHTML = 
+                `3D Vertex Data:<br>${cgi3DVertices.map((v, i) => 
+                    `V${i}: (${v.x.toFixed(1)}, ${v.y.toFixed(1)}, ${v.z.toFixed(1)})`).slice(0, 4).join('<br>')}<br>...və s.`;
+        }
+
+        // ==================== AI VƏ MAŞIN ÖYRƏNMƏLƏRI ====================
+        let aiCanvas, aiCtx;
+        let aiWeights = Array(neurons).fill().map(() => Math.random() * 2 - 1);
+        let aiTrainingData = [];
+
+        function drawAI() {
+            aiCtx.clearRect(0, 0, 400, 400);
+            aiCtx.save();
+            aiCtx.translate(200, 200);
+            
+            // Neural şəbəkə vizualizasiyası
+            const inputNodes = 3;
+            const hiddenNodes = neurons;
+            const outputNodes = 2;
+            
+            // Bağlantıları çək
+            for (let i = 0; i < inputNodes; i++) {
+                for (let j = 0; j < hiddenNodes; j++) {
+                    const weight = aiWeights[j] || 0;
+                    aiCtx.strokeStyle = weight > 0 ? 'rgba(76, 205, 196, 0.7)' : 'rgba(255, 107, 107, 0.7)';
+                    aiCtx.lineWidth = Math.abs(weight) * 3;
+                    aiCtx.beginPath();
+                    aiCtx.moveTo(-150, (i - 1) * 60);
+                    aiCtx.lineTo(0, (j - hiddenNodes/2) * 40);
+                    aiCtx.stroke();
+                }
+            }
+            
+            // Output bağlantıları
+            for (let i = 0; i < hiddenNodes; i++) {
+                for (let j = 0; j < outputNodes; j++) {
+                    aiCtx.strokeStyle = 'rgba(255, 230, 109, 0.5)';
+                    aiCtx.lineWidth = 2;
+                    aiCtx.beginPath();
+                    aiCtx.moveTo(0, (i - hiddenNodes/2) * 40);
+                    aiCtx.lineTo(150, (j - 0.5) * 60);
+                    aiCtx.stroke();
+                }
+            }
+            
+            // Input nodları
+            for (let i = 0; i < inputNodes; i++) {
+                aiCtx.beginPath();
+                aiCtx.arc(-150, (i - 1) * 60, 15, 0, 2 * Math.PI);
+                aiCtx.fillStyle = '#45b7d1';
+                aiCtx.fill();
+                aiCtx.fillStyle = 'white';
+                aiCtx.font = '12px Arial';
+                aiCtx.textAlign = 'center';
+                aiCtx.fillText(`I${i}`, -150, (i - 1) * 60 + 4);
+            }
+            
+            // Hidden nodlar
+            for (let i = 0; i < hiddenNodes; i++) {
+                aiCtx.beginPath();
+                aiCtx.arc(0, (i - hiddenNodes/2) * 40, 12, 0, 2 * Math.PI);
+                aiCtx.fillStyle = '#4ecdc4';
+                aiCtx.fill();
+                aiCtx.fillStyle = 'white';
+                aiCtx.fillText(`H${i}`, 0, (i - hiddenNodes/2) * 40 + 4);
+            }
+            
+            // Output nodlar
+            for (let i = 0; i < outputNodes; i++) {
+                aiCtx.beginPath();
+                aiCtx.arc(150, (i - 0.5) * 60, 15, 0, 2 * Math.PI);
+                aiCtx.fillStyle = '#ffe66d';
+                aiCtx.fill();
+                aiCtx.fillStyle = 'black';
+                aiCtx.fillText(`O${i}`, 150, (i - 0.5) * 60 + 4);
+            }
+            
+            // Aktivasiya göstəricisi silindi
+            aiCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            aiCtx.font = '14px Arial';
+            
+            aiCtx.restore();
+            updateAIMatrix();
+        }
+
+        function trainAI() {
+            // Öyrənmə simulyasiyası
+            const oldAccuracy = aiAccuracy;
+            aiWeights = aiWeights.map(w => w + (Math.random() - 0.5) * learningRate * 2);
+            aiAccuracy = Math.min(98, aiAccuracy + (Math.random() * 3 - 1));
+            
+            document.getElementById('aiAccuracy').textContent = aiAccuracy.toFixed(1) + '%';
+            
+            // Öyrənmə animasiyası
+            let frame = 0;
+            const animateTraining = () => {
+                aiCtx.fillStyle = `rgba(76, 205, 196, ${0.5 - frame * 0.1})`;
+                aiCtx.fillRect(180, 180, 20, 20);
+                frame++;
+                if (frame < 5) {
+                    setTimeout(animateTraining, 100);
+                }
+            };
+            animateTraining();
+            
+            drawAI();
+        }
+
+        function testAI() {
+            const testAccuracy = aiAccuracy + (Math.random() * 10 - 5);
+            const result = testAccuracy > 75 ? 'UĞURLU! ✅' : 'Daha çox məşq lazım ❌';
+            
+            aiCtx.save();
+            aiCtx.fillStyle = testAccuracy > 75 ? '#4ecdc4' : '#ff6b6b';
+            aiCtx.font = '16px Arial';
+            aiCtx.textAlign = 'center';
+            aiCtx.fillText(`Test: ${result}`, 200, 30);
+            aiCtx.fillText(`${testAccuracy.toFixed(1)}%`, 200, 50);
+            aiCtx.restore();
+            
+            setTimeout(drawAI, 2000);
+        }
+
+        function adjustWeights() {
+            aiWeights = aiWeights.map(() => (Math.random() - 0.5) * 2);
+            aiAccuracy = 50 + Math.random() * 45; // 50-95% arası
+            document.getElementById('aiAccuracy').textContent = aiAccuracy.toFixed(1) + '%';
+            drawAI();
+        }
+
+        function updateLearningRate(value) {
+            learningRate = value / 1000;
+            document.getElementById('learningRate').textContent = learningRate.toFixed(3);
+            document.getElementById('learningRateValue').textContent = value;
+        }
+
+        function updateNeurons(value) {
+            neurons = parseInt(value);
+            document.getElementById('neuronsValue').textContent = value;
+            aiWeights = Array(neurons).fill().map(() => (Math.random() - 0.5) * 2);
+            drawAI();
+        }
+
+        function resetAI() {
+            aiAccuracy = 85;
+            learningRate = 0.01;
+            neurons = 5;
+            aiWeights = Array(neurons).fill().map(() => (Math.random() - 0.5) * 2);
+            document.getElementById('aiAccuracy').textContent = '85%';
+            document.getElementById('learningRate').textContent = '0.01';
+            document.getElementById('learningRateSlider').value = 10;
+            document.getElementById('neuronsSlider').value = 5;
+            drawAI();
+        }
+
+        function updateAIMatrix() {
+            const weightsStr = aiWeights.map(w => w.toFixed(3)).join(', ');
+            const biasStr = (Math.random() - 0.5).toFixed(3);
+            document.getElementById('aiMatrix').innerHTML = 
+                `Weight Matrix W1:<br>[${weightsStr}]<br>
+                Bias b1: [${biasStr}]<br>
+                Output = σ(W1 × input + b1)`;
+        }
+
+        // ==================== VEB İNKİŞAFI ====================
+        let webCanvas, webCtx;
+        let webFilters = [];
+
+        function drawWebElement() {
+            webCtx.clearRect(0, 0, 400, 400);
+            webCtx.save();
+            webCtx.translate(200, 200);
+            webCtx.rotate(webRotation * Math.PI / 180);
+            webCtx.scale(webScale, webScale);
+            webCtx.transform(1, 0, webSkewX / 100, 1, 0, 0);
+            
+            // Web komponenti (modern card)
+            const gradient = webCtx.createLinearGradient(-80, -60, 80, 60);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(0.5, '#764ba2');
+            gradient.addColorStop(1, '#f093fb');
+            
+            // Kart shadow effekti
+            webCtx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            webCtx.shadowBlur = 15;
+            webCtx.shadowOffsetX = 5;
+            webCtx.shadowOffsetY = 5;
+            
+            webCtx.fillStyle = gradient;
+            webCtx.fillRect(-80, -60, 160, 120);
+            
+            // Daxili məzmun
+            webCtx.shadowBlur = 0;
+            webCtx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            webCtx.fillRect(-70, -50, 140, 100);
+            
+            // İkonlar və mətn
+            webCtx.fillStyle = '#333';
+            webCtx.font = 'bold 16px Arial';
+            webCtx.textAlign = 'center';
+            webCtx.fillText('🌟 WEB CARD', 0, -25);
+            webCtx.font = '14px Arial';
+            webCtx.fillText('CSS Transform', 0, -5);
+            webCtx.fillText('Matrix Power!', 0, 15);
+            
+            // Dekorativ elementlər
+            webCtx.fillStyle = '#ff6b6b';
+            webCtx.beginPath();
+            webCtx.arc(-50, -30, 8, 0, 2 * Math.PI);
+            webCtx.fill();
+            
+            webCtx.fillStyle = '#4ecdc4';
+            webCtx.beginPath();
+            webCtx.arc(50, -30, 8, 0, 2 * Math.PI);
+            webCtx.fill();
+            
+            webCtx.restore();
+            updateWebMatrix();
+        }
+
+        function webRotate(degrees) {
+            webRotation += degrees;
+            document.getElementById('webRotationSlider').value = webRotation;
+            drawWebElement();
+        }
+
+        function webSkew(amount) {
+            webSkewX += amount;
+            drawWebElement();
+        }
+
+        function webScaleFunction(factorValue) {
+            webScale *= factorValue;
+            document.getElementById('webScaleSlider').value = webScale * 100;
+            drawWebElement();
+        }
+
+        function addWebFilter(type) {
+            if (type === 'blur') {
+                webCtx.filter = 'blur(3px)';
+                document.getElementById('filterEffect').textContent = 'blur(3px)';
+            } else if (type === 'brightness') {
+                webCtx.filter = 'brightness(150%) contrast(120%)';
+                document.getElementById('filterEffect').textContent = 'brightness(150%)';
+            }
+            drawWebElement();
+            setTimeout(() => {
+                webCtx.filter = 'none';
+                document.getElementById('filterEffect').textContent = 'none';
+                drawWebElement();
+            }, 3000);
+        }
+
+        function updateWebRotation(value) {
+            webRotation = parseInt(value);
+            drawWebElement();
+        }
+
+        function updateWebScale(value) {
+            webScale = value / 100;
+            drawWebElement();
+        }
+
+        function resetWeb() {
+            webRotation = 0;
+            webScale = 1;
+            webSkewX = 0;
+            webFilters = [];
+            webCtx.filter = 'none';
+            document.getElementById('webRotationSlider').value = 0;
+            document.getElementById('webScaleSlider').value = 100;
+            document.getElementById('filterEffect').textContent = 'none';
+            drawWebElement();
+        }
+
+        function updateWebMatrix() {
+            const cos = Math.cos(webRotation * Math.PI / 180) * webScale;
+            const sin = Math.sin(webRotation * Math.PI / 180) * webScale;
+            const skew = webSkewX / 100;
+            
+            document.getElementById('cssMatrix').textContent = 
+                `${cos.toFixed(2)}, ${sin.toFixed(2)}, ${(-sin).toFixed(2)}, ${cos.toFixed(2)}, 0, 0`;
+                
+            document.getElementById('webMatrix').innerHTML = 
+                `CSS Transform Matrix:<br>
+                matrix(${cos.toFixed(2)}, ${sin.toFixed(2)}, ${(-sin + skew).toFixed(2)}, ${cos.toFixed(2)}, 0, 0)<br>
+                <br>🎯 Əməliyyat Tərkibi:<br>
+                • Rotation: ${webRotation}°<br>
+                • Scale: ${webScale.toFixed(2)}x<br>
+                • Skew: ${webSkewX}°<br>
+                • Filter: ${document.getElementById('filterEffect').textContent}`;
+        }
+
+        // ==================== İNİTİALİZASİYA ====================
+        
+        // Bütün canvas elementləri yükləndiyi zaman
+        window.addEventListener('load', function() {
+            // Initialize canvases
+            gameCanvas = document.getElementById('gameCanvas');
+            gameCtx = gameCanvas.getContext('2d');
+            console.log('🎮 Game canvas initialized:', gameCanvas);
+            
+            imageCanvas = document.getElementById('imageCanvas');
+            imageCtx = imageCanvas.getContext('2d');
+            console.log('📸 Image canvas initialized:', imageCanvas);
+            
+            cgi3DCanvas = document.getElementById('cgi3DCanvas');
+            cgi3DCtx = cgi3DCanvas.getContext('2d');
+            console.log('🎬 3D canvas initialized:', cgi3DCanvas);
+            
+            aiCanvas = document.getElementById('aiCanvas');
+            aiCtx = aiCanvas.getContext('2d');
+            console.log('🤖 AI canvas initialized:', aiCanvas);
+            
+            webCanvas = document.getElementById('webCanvas');
+            webCtx = webCanvas.getContext('2d');
+            console.log('💻 Web canvas initialized:', webCanvas);
+            
+            drawGameObject();
+            initializeImage();
+            draw3DScene();
+            drawAI();
+            drawWebElement();
+            
+            // Avtomatik rotasiya (yavaş)
+            setInterval(() => {
+                if (!isAnimating) {
+                    rotate3DScene('Y', 0.5);
+                }
+            }, 50);
+        });
+
+        // Responsive canvas ölçüləri
+        function resizeCanvases() {
+            const canvases = document.querySelectorAll('canvas');
+            canvases.forEach(canvas => {
+                if (window.innerWidth < 768) {
+                    canvas.style.width = '100%';
+                    canvas.style.height = 'auto';
+                }
+            });
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+    </script>
+</body>
+</html>
